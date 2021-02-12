@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" xmlns:adm="http://github.com/adminfaces"
+                xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ff = "http://java.sun.com/jsf/composite/form-field"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="title">
+        Form Otoritas
+    </ui:define>
+    
+	<ui:define name="head-end">
+		<style type="text/css">
+			.noBorders tr, .noBorders td {
+			    background: none !important;
+			    border: none !important;
+			}
+			
+			.padding2 tr, .padding2 td {
+			    padding: 2px !important;			    
+			}
+		</style>
+	</ui:define>
+
+    <ui:define name="body">
+        <f:metadata>
+            <f:viewParam name="id" value="#{userRoleEditMB.id}"/>
+            <f:event listener="#{userRoleEditMB.initializer()}" type="preRenderView"></f:event>
+        </f:metadata>
+
+        <adm:breadcrumb title="Role Detail"/>
+        <h:form id="form" prependId="false">
+            <p:focus/>
+
+
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <div id="main-buttons" >
+                        <p:commandButton value="Simpan" update="@form :info-messages"
+                                         action="#{userRoleEditMB.save()}" 
+                                         icon="fa fa-check" styleClass="btn-primary"
+                                         rendered="#{userRoleEditMB.userAdmin eq false}"/>
+                        <p:spacer width="5"/>
+						 <p:commandButton value="Hapus" update="@form :info-messages"
+                                         icon="fa fa-trash"
+                                         action="#{userRoleEditMB.delete()}"
+                                         styleClass="btn-danger"
+                                         rendered="#{userRoleEditMB.id ne null and userRoleEditMB.userAdmin == false}"/>
+                        <p:spacer width="5"/>
+                        <p:commandButton value="Kembali"
+                                         action="#{userRoleEditMB.back}"
+                                         process="@this"
+                                         icon="fa fa-close"/>
+
+                    </div>
+
+                    <p:separator/>
+
+                    <div class="ui-fluid">
+                        <p:panelGrid id="capaPanel" styleClass="noBorders padding2">                           
+							
+							<p:row>
+        						<p:column style="width:150px">
+									<p:outputLabel value="User"/>
+								</p:column>
+                            	<p:column>:</p:column>
+								<p:column> 
+									
+									<!-- edit -->
+									<p:inputText value="#{userRoleEditMB.userRole.userLogin.username}" size="#{userRoleEditMB.userRole.userLogin.username.length() > 30 ? userRoleEditMB.userRole.userLogin.username.length() : 30}" readonly="true" rendered="#{userRoleEditMB.id ne null}"/>
+                            		<!-- new -->
+                            		<p:selectOneMenu id="userLogin" required="true" rendered="#{userRoleEditMB.id eq null}"
+                                            value="#{userRoleEditMB.userRole.userLogin}" converter="#{userLoginConverter}">	
+                                        <f:selectItems value="#{userRoleEditMB.userLoginList}" 
+				                            	var="user" itemLabel="#{user.username}" itemValue="#{user}" />	                             	
+		                            </p:selectOneMenu>						
+								</p:column>
+							</p:row>
+							
+							<p:row>
+        						<p:column style="width:150px">
+									<p:outputLabel value="Menu"/>
+								</p:column>
+                            	<p:column>:</p:column>
+								<p:column> 	
+									<!-- edit -->
+									<p:inputText value="#{userRoleEditMB.userRole.role.name}" readonly="true" rendered="#{userRoleEditMB.id ne null}"/>
+                            		<!-- new -->											
+                            		<p:selectOneMenu id="parentRole" required="true" rendered="#{userRoleEditMB.id eq null}"
+                                            value="#{userRoleEditMB.userRole.role}" converter="#{roleConverter}">	
+                                        <f:selectItem noSelectionOption="true" itemLabel="--Pilih--" /> 
+                                        <f:selectItems value="#{userRoleEditMB.parentRoleList}" 
+				                            	var="prole" itemLabel="#{prole.name}" itemValue="#{prole}" />    	                                              
+			                            <p:ajax 
+		                            		process="@this" 
+		                            		update="@this roles" 
+		                            		listener="#{userRoleEditMB.parentRoleChangeListener}" /> 						                            						                             	
+		                            </p:selectOneMenu>					
+								</p:column>
+							</p:row>
+							
+							<p:row>
+								<p:column> 
+									<p:outputLabel value="Sub Menu"/>
+								</p:column>
+                            	<p:column>:</p:column>
+								<p:column> 					 
+									<p:selectManyCheckbox id="roles" value="#{userRoleEditMB.selectedRoleList}" layout="pageDirection" columns="2" 
+										converter="#{roleConverter}">
+		                                <f:selectItems value="#{userRoleEditMB.roleList}" var="role"                                 	
+		                                	itemLabel="#{role.name}" itemValue="#{role}" />
+		                            </p:selectManyCheckbox>					                                                                
+							 	</p:column>
+							</p:row>
+                            	
+							<!-- user info -->                            	
+							<ff:audit-info-field
+								fieldCreatedByValue="#{userRoleEditMB.userRole.createdBy ne null ? userRoleEditMB.userRole.createdBy : (userRoleEditMB.userRole.id ne null ? '?' : userMB.currentUsername)}"
+							    fieldCreatedDateValue="#{userRoleEditMB.userRole.createdDate}"
+							    fieldLastModifiedByValue="#{userRoleEditMB.userRole.lastModifiedBy}"
+							    fieldLastModifiedDateValue="#{userRoleEditMB.userRole.lastModifiedDate}" />
+                        </p:panelGrid>
+
+
+                    </div>
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

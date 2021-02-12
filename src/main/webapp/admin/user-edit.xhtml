@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui" xmlns:adm="http://github.com/adminfaces"
+                xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ff = "http://java.sun.com/jsf/composite/form-field"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="title">
+        User Detail
+    </ui:define>
+    
+	<ui:define name="head-end">
+		<style type="text/css">
+			.noBorders tr, .noBorders td {
+			    background: none !important;
+			    border: none !important;
+			}
+			
+			.padding2 tr, .padding2 td {
+			    padding: 2px !important;			    
+			}
+		</style>
+	</ui:define>
+
+    <ui:define name="body">
+        <f:metadata>
+            <f:viewParam name="id" value="#{userEditMB.id}"/>
+            <f:event listener="#{userEditMB.initializer()}" type="preRenderView"></f:event>
+        </f:metadata>
+
+        <adm:breadcrumb title="User Detail"/>
+        <h:form id="form" prependId="false">
+            <p:focus/>
+
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <div id="main-buttons" >
+                        <p:commandButton value="Simpan" process="@form" update="@form :info-messages"
+                                         action="#{userEditMB.save()}"
+                                         icon="fa fa-check" styleClass="btn-primary"/>
+                        <p:spacer width="5"/>
+
+                        <p:commandButton value="Hapus" process="@this" update=":info-messages"
+                                         rendered="#{userEditMB.editable and userEditMB.user.username ne 'admin'}"
+                                         icon="fa fa-trash"
+                                         action="#{userEditMB.delete()}"
+                                         styleClass="btn-danger">
+                        </p:commandButton>
+                        <p:spacer width="5"/>
+                        <p:commandButton value="Kembali"
+                                         action="#{userEditMB.back}"
+                                         process="@this"
+                                         icon="fa fa-close"/>
+
+                    </div>
+
+                    <p:separator/>
+
+                    <div class="ui-fluid">
+                        <p:panelGrid id="capaPanel"  styleClass="noBorders padding2">                           
+							<p:row>
+			                 	<p:column>
+		                            <p:outputLabel value="Nama User" for="username"/>
+		                       	</p:column>
+                            	<p:column>:</p:column>
+	                            <p:column>  
+		                            <p:inputText id="username" value="#{userEditMB.user.username}" size="#{userEditMB.user.username.length() > 30 ? userEditMB.user.username.length() : 30}" autocomplete="false" required="true"/>
+								</p:column>
+                            </p:row>
+                            
+							<p:row>
+			                 	<p:column>
+									<p:outputLabel value="Email" for="email"/>
+								</p:column>
+                            	<p:column>:</p:column>
+	                            <p:column>  
+		                            <p:inputText id="email" value="#{userEditMB.user.email}" autocomplete="false"/>
+								</p:column>
+                            </p:row>
+                            
+							<p:row rendered="#{userEditMB.id eq null}">
+			                 	<p:column>		
+									<p:outputLabel value="Password" for="password"/>
+								</p:column>
+                            	<p:column>:</p:column>
+	                            <p:column>  
+									<p:password id="password" value="#{userEditMB.user.password}" autocomplete="false" match="passwordConfirm" required="true"/>
+								</p:column>
+                            </p:row>
+                            
+							<p:row rendered="#{userEditMB.id eq null}">
+			                 	<p:column>
+		                            <p:outputLabel value="Konfirasi Password Baru" for="passwordConfirm"/>
+		                       	</p:column>
+                            	<p:column>:</p:column>
+	                            <p:column>  
+		                            <p:password id="passwordConfirm" value="#{userEditMB.passwordConfirm}"  autocomplete="false" required="true"/>
+		                    	</p:column>
+                            </p:row>
+                            
+		                    <p:row rendered="#{userEditMB.user.username ne 'admin'}">
+			                 	<p:column>        													
+		                           	<p:outputLabel value="Aktif" for="enabled"/>
+		                       	</p:column>
+                            	<p:column>:</p:column>
+	                            <p:column>  
+		                            <p:selectBooleanCheckbox id="enabled" value="#{userEditMB.enabled}"/>
+								</p:column>
+                            </p:row>
+                            	
+							<!-- user info -->                            	
+							<ff:audit-info-field
+								fieldCreatedByValue="#{userEditMB.user.createdBy ne null ? userEditMB.user.createdBy : (userEditMB.user.id ne null ? '?' : userMB.currentUsername)}"
+							    fieldCreatedDateValue="#{userEditMB.user.createdDate}"
+							    fieldLastModifiedByValue="#{userEditMB.user.lastModifiedBy}"
+							    fieldLastModifiedDateValue="#{userEditMB.user.lastModifiedDate}" />
+                        </p:panelGrid>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

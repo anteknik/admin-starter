@@ -1,0 +1,58 @@
+<html xmlns = "http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:adm="http://github.com/adminfaces"
+      xmlns:composite = "http://java.sun.com/jsf/composite">
+
+	<composite:interface>
+	    <composite:attribute name = "fieldCreatedByValue" />
+	    <composite:attribute name = "fieldCreatedDateValue" />
+	    <composite:attribute name = "fieldLastModifiedByValue" />
+	    <composite:attribute name = "fieldLastModifiedDateValue" />
+	</composite:interface>
+	
+	<composite:implementation>		
+		
+		<p:row>
+           	<p:column colspan="3" style="border:none !important;padding-top:10px !important;" />
+		</p:row>
+		
+		<p:row>
+           	<p:column colspan="3" style="padding:0px !important;border-top:solid 1px #d2d6de !important;" />
+		</p:row>
+		
+		<p:row>
+           	<p:column style="font-style: italic !important;color:#8A8A8A !important;">	  
+				<p:outputLabel value="Input By"/>
+			</p:column>
+	        <p:column style="font-style: italic !important;color:#8A8A8A !important;">:</p:column>
+			<p:column style="font-style: italic !important;color:#8A8A8A !important;">
+          		<p:outputLabel id="inputBy" value="#{cc.attrs.fieldCreatedByValue ne null ? cc.attrs.fieldCreatedByValue : '?'}" readonly="true" />
+          	</p:column>
+		</p:row>
+		
+		<p:row rendered="#{cc.attrs.fieldLastModifiedByValue ne null}">
+           	<p:column style="font-style: italic !important;color:#8A8A8A !important;">	  
+				<p:outputLabel value="Update By"/>
+			</p:column>
+	        <p:column style="font-style: italic !important;color:#8A8A8A !important;">:</p:column>
+			<p:column style="font-style: italic !important;color:#8A8A8A !important;">
+          		<p:outputLabel id="updateBy" value="#{cc.attrs.fieldLastModifiedByValue ne null ? cc.attrs.fieldLastModifiedByValue : '?'}" readonly="true" />
+          	</p:column>
+		</p:row>
+              	
+	    <p:row rendered="#{cc.attrs.fieldLastModifiedDateValue ne null}">
+	    	<p:column style="font-style: italic !important;color:#8A8A8A !important;" >	  							
+				<p:outputLabel value="Update Date"/>
+			</p:column>
+	   		<p:column style="font-style: italic !important;color:#8A8A8A !important;">:</p:column>
+			<p:column style="font-style: italic !important;color:#8A8A8A !important;">	
+       			<p:outputLabel id="updateDate" value="#{cc.attrs.fieldLastModifiedDateValue ne null ? cc.attrs.fieldLastModifiedDateValue : (cc.attrs.fieldCreatedDateValue ne null ? cc.attrs.fieldCreatedDateValue : '?')}" readonly="true">
+       				<f:convertDateTime pattern="dd-MM-yyyy HH:mm:ss.ms" />
+               	</p:outputLabel>
+			</p:column>
+		</p:row>
+	</composite:implementation>
+</html>

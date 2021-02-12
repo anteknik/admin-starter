@@ -1,0 +1,98 @@
+    <ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://github.com/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+        <style type="text/css">
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0.5em 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: auto;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="title">
+        Daftar Menu Utama
+    </ui:define>
+
+ 
+    <ui:define name="body">
+        <adm:breadcrumb title="Daftar Menu Utama" clear="true"/>
+
+        <h:form>
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                	<!-- 
+                    <p:commandButton action="menu-edit?faces-redirect=true" ajax="false" icon="fa fa-plus"
+                                     value="Tambah" styleClass="btn-primary">
+                    	<f:param name="caller" value="parent"/>
+                    </p:commandButton>                 
+                    <p:spacer width="5"/>
+
+                    <p:separator/>
+                     -->
+                    <p:dataTable id="menuTable" widgetVar="menuTable" rows="10"
+                                 value="#{menuListMB.roleList}" var="menu" rowKey="#{menu.id}" rowIndexVar="idx"
+                                 paginator="true" reflow="true" selection="#{menuListMB.selectedRoleList}"
+                                 paginatorPosition="bottom"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+                                 currentPageReportTemplate=""
+                                 rowsPerPageTemplate="5,10,15,20,30">
+
+						<!-- 
+                        <p:column selectionMode="multiple" width="5%" styleClass="align-center"/>
+						 -->
+						<p:column headerText="No" style="width:50px;">
+							<h:outputLabel value="#{idx+1}" />
+						</p:column> 
+						
+                        <p:column headerText="Nama"
+                                filterBy="#{menu.name}" filterMatchMode="contains"
+                                sortBy="#{menu.name}">
+                            <h:link value="#{menu.name}" outcome="menu-edit.xhtml">
+                                <f:param name="id" value="#{menu.id}"/>
+                                <f:param name="caller" value="parent"/>
+                            </h:link>
+                        </p:column>
+                                                                      
+                        <p:column headerText="Icon">
+                            <h:outputLabel value="#{menu.icon}" />
+                        </p:column>            
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+
+		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+	        <p:commandButton value="Ya" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+	        <p:commandButton value="Tidak" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+	    </p:confirmDialog>    
+	    
+        <p:dialog header="Selected Menu" widgetVar="selectMenus" height="250"
+                  width="400" responsive="true" styleClass="box-success">
+            <p:dataList id="selectedRoleList" value="#{menuListMB.selectedRoleList}" var="mnu"
+                        type="definition">
+
+                ID: #{mnu.id} - Nama: #{mnu.name}
+
+            </p:dataList>
+        </p:dialog>
+
+
+    </ui:define>
+
+</ui:composition>

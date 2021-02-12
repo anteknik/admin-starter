@@ -1,25 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:ui="http://java.sun.com/jsf/facelets"
-                xmlns:p="http://primefaces.org/ui" xmlns:h="http://xmlns.jcp.org/jsf/html">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://xmlns.jcp.org/jsf/html">
 
-    <ul class="sidebar-menu tree" data-widget="tree">
-        <li>
-            <p:link outcome="/index" onclick="clearBreadCrumbs()">
-                <i class="fa fa-home"></i>
-                <span>Home</span>
-            </p:link>
-        </li>
-        <li class="header">
-            General
-        </li>
-        <li>
-            <p:link outcome="/car-list">
-                <i class="fa fa-car"></i>
-                <span>Cars</span>
-            </p:link>
-        </li>
+	<ul class="sidebar-menu tree" data-widget="tree">
+		<li><p:link outcome="/index" onclick="clearBreadCrumbs()">
+				<i class="fa fa-home"></i>
+				<span>Home</span>
+			</p:link></li>
+		<li class="header">General</li>
+		<p:repeat value="#{userMenuMB.menuList}" var="menu">
+			<li class="header">#{menu.name}</li>
+			<p:repeat value="#{menu.submenus}" var="submenu">
+				<li><p:link outcome="#{submenu.link}"
+						rendered="#{submenu.link ne null}">
+						<i class="#{submenu.icon}"></i>
+						<span>#{submenu.name}</span>
 
-    </ul>
+					</p:link></li>
+			</p:repeat>
+		</p:repeat>
+
+		<li><p:link href="/logout.xhtml"
+				styleClass="btn-danger btn-block">
+				<i class="fa fa-power-off"></i>
+				<span>logout</span>
+			</p:link></li>
+
+	</ul>
 
 </ui:composition>

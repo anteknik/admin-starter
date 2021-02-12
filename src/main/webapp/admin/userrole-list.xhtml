@@ -1,0 +1,83 @@
+    <ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:adm="http://github.com/adminfaces"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <ui:define name="head-end">
+        <style type="text/css">
+            .ui-grid-row .ui-grid-col-2,
+            .ui-grid-row .ui-grid-col-10 {
+                padding: 0.5em 0;
+                margin-left: 10px;
+            }
+
+            .ui-orderlist .ui-orderlist-list {
+                height: auto;
+            }
+
+            .ui-orderlist .ui-grid-row .ui-grid-col-2,
+            .ui-orderlist .ui-grid-row .ui-grid-col-10 {
+                padding: 0;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="title">
+        List Otoritas
+    </ui:define>
+
+ 
+    <ui:define name="body">
+        <adm:breadcrumb title="List Admin" clear="true"/>
+
+        <h:form>
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <p:commandButton action="userrole-edit?faces-redirect=true" ajax="false" icon="fa fa-plus"
+                                     value="Tambah" styleClass="btn-primary">
+                    	<f:setPropertyActionListener value="#{null}" target="#{userRoleEditMB.id}" />
+                    </p:commandButton>	
+                    <p:spacer width="5"/>
+
+                    <p:separator/>
+
+
+                    <p:dataTable id="userRoleTable" widgetVar="userRoleTable" rows="10"
+                                 value="#{userRoleListMB.userRoleList}" var="userRole" rowKey="#{userRole.id}" rowIndexVar="idx"
+                                 paginator="true" reflow="true" selection="#{userRoleListMB.selectedUserRoleList}"
+                                 paginatorPosition="bottom"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
+                                 currentPageReportTemplate=""
+                                 rowsPerPageTemplate="5,10,15,20,30">
+
+
+                        <p:column headerText="Nama"
+                                filterBy="#{userRole.userLogin.username}" filterMatchMode="contains"
+                                sortBy="#{userRole.userLogin.username}">
+                            <h:link value="#{userRole.userLogin.username}" outcome="userrole-edit.xhtml">
+                                <f:param name="id" value="#{userRole.id}"/>
+                            </h:link>
+                        </p:column>
+                        <!--  -->
+                        <p:column headerText="Menu"
+                        		filterBy="#{userRole.role.name}"
+            					filterMatchMode="contains"
+                               	sortBy="#{userRole.role.name}">
+                            <h:outputLabel value="#{userRole.role.name}" rendered="#{userRole.role ne null}" />
+                        </p:column>
+                        
+                        <p:column headerText="Sub Menu">
+                        	<h:outputLabel value="#{userRole.delimitedSubRoleNames}" />
+                        </p:column>
+                        
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>
